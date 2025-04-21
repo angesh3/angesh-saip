@@ -1,51 +1,87 @@
 version: '3.8'
 
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - saip-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+      - NEXT_PUBLIC_ML_API_URL=http://localhost:8001
+    depends_on:
+      - backend
+      - ml-service
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - NODE_ENV=development
-    depends_on:
-      backend:
-        condition: service_healthy
     networks:
       - saip-network
 
-  data-generator:
-    build: ./backend
-    command: python scripts/generate_sample_data.py
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/saip
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-here}
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - ML_SERVICE_URL=http://ml-service:8001
+    depends_on:
+      - db
     volumes:
       - ./backend:/app
-    environment:
-      - PYTHONUNBUFFERED=1
     networks:
       - saip-network
+
+  ml-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.ml
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/saip
+      - MODEL_PATH=/app/models
+    volumes:
+      - ./backend:/app
+      - ./models:/app/models
     depends_on:
-      backend:
-        condition: service_healthy
+      - db
+    networks:
+      - saip-network
+
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=saip
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - saip-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@saip.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    depends_on:
+      - db
+    networks:
+      - saip-network
+
+volumes:
+  postgres-data:
 
 networks:
   saip-network:

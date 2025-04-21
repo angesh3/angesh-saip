@@ -2,15 +2,15 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install dependencies
 COPY package.json package-lock.json* ./
 RUN npm install
 
+# Copy the rest of the application
 COPY . .
 
-# Next.js build command
-RUN npm run build || echo "Build failed, but continuing..."
-
+# Expose the port
 EXPOSE 3000
 
-# Use the correct Next.js start command
+# Start the application in development mode
 CMD ["npm", "run", "dev"] 

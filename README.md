@@ -1,93 +1,91 @@
 # Secure Access Insights Platform (SAIP)
 
-A modern platform for monitoring and analyzing user access behavior in Zero Trust networks.
+A comprehensive platform for monitoring, analyzing, and securing access patterns across your organization.
+
+## Overview
+
+SAIP provides real-time monitoring, anomaly detection, and alerting for access patterns across your organization. It helps security teams identify potential security threats, analyze access patterns, and respond to incidents quickly.
 
 ## Features
 
-- Real-time access behavior monitoring
-- ML-based anomaly detection
-- Interactive dashboard with visualizations
-- Alert management system
-- Webhook integrations
+- **Real-time Access Monitoring**: Track all access attempts across your organization
+- **Anomaly Detection**: Identify suspicious access patterns using machine learning
+- **Alert Management**: Create, assign, and track security alerts
+- **Role-Based Access Control**: Secure access to sensitive information
+- **Analytics Dashboard**: Visualize access patterns and security metrics
+- **API Integration**: Connect with existing security tools and systems
 
-## Tech Stack
+## Architecture
 
-- Frontend: Next.js with TypeScript
-- Backend: Python FastAPI
-- Database: PostgreSQL
-- ML: scikit-learn, pandas
-- Visualization: Chart.js
+The platform consists of three main components:
 
-## Project Structure
-
-```
-saip/
-├── frontend/           # Next.js frontend application
-├── backend/           # FastAPI backend service
-├── ml/               # ML models and data processing
-└── docs/             # Documentation
-```
+1. **Frontend**: Next.js application with React, TypeScript, and Tailwind CSS
+2. **Backend**: FastAPI application with PostgreSQL database
+3. **ML Service**: Python service for anomaly detection and pattern analysis
 
 ## Getting Started
 
 ### Prerequisites
 
 - Docker and Docker Compose
-- Node.js 18+ (for local development)
-- Python 3.9+ (for local development)
-- PostgreSQL (for local development)
+- Node.js 18+ (for local frontend development)
+- Python 3.11+ (for local backend development)
 
-### Running with Docker Compose
+### Installation
 
-The easiest way to run the application is using Docker Compose:
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/saip.git
+   cd saip
+   ```
 
-```bash
-# Build and start all services
-docker-compose up -d
+2. Set up environment variables:
+   ```
+   cp frontend/.env.example frontend/.env.local
+   cp backend/.env.example backend/.env
+   ```
 
-# View logs
-docker-compose logs -f
+3. Start the application using Docker Compose:
+   ```
+   docker-compose up -d
+   ```
 
-# Stop all services
-docker-compose down
-```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+4. Access the application:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000/api
+   - API Documentation: http://localhost:8000/docs
 
 ### Local Development
 
-If you prefer to run the application locally without Docker:
+#### Frontend
 
-1. Install frontend dependencies:
-   ```bash
-   cd frontend
-   npm install
-   ```
-2. Install backend dependencies:
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   ```
-3. Start the backend server:
-   ```bash
-   cd backend
-   uvicorn main:app --reload
-   ```
-4. Start the frontend development server:
-   ```bash
-   cd frontend
-   npm run dev
-   ```
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Development
+#### Backend
 
-- Frontend runs on http://localhost:3000
-- Backend API runs on http://localhost:8000
-- API documentation available at http://localhost:8000/docs
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## API Documentation
+
+The API documentation is available at http://localhost:8000/docs when running the backend service.
 
 ## License
 
-MIT 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- FastAPI for the backend framework
+- Next.js for the frontend framework
+- PostgreSQL for the database
+- scikit-learn for machine learning capabilities 
