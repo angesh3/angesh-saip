@@ -1,27 +1,20 @@
 export interface AccessLog {
     id: number;
-    user_id: number;
+    user_id: string;
     timestamp: string;
     resource_type: string;
-    resource_name: string;
     action: string;
-    location: string;
-    success: boolean;
-    ip_address: string;
-    user_agent: string;
-    anomaly_score: number;
+    status: string;
+    details: string;
 }
 
 export interface AnomalyAlert {
     id: number;
     timestamp: string;
-    alert_type: string;
-    severity: string;
-    status: string;
+    severity: 'low' | 'medium' | 'high';
     description: string;
     source_log_id: number;
-    assigned_to_id: number | null;
-    resolution_notes: string | null;
+    status: 'open' | 'investigating' | 'resolved';
 }
 
 export interface DashboardStats {

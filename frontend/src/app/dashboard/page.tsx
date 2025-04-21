@@ -14,6 +14,12 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Overview } from "@/components/dashboard/overview";
+import { RecentAlerts } from "@/components/dashboard/recent-alerts";
+import { AccessActivity } from "@/components/dashboard/access-activity";
+import { DashboardHeader } from "@/components/dashboard/header";
+import { DashboardShell } from "@/components/dashboard/shell";
 
 ChartJS.register(
   CategoryScale,
@@ -28,7 +34,7 @@ ChartJS.register(
 // Get API URL from environment variable or use default
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<AccessLog[]>([]);
   const [alerts, setAlerts] = useState<AnomalyAlert[]>([]);
@@ -113,82 +119,141 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Secure Access Insights Platform</h1>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Logout
-        </button>
-      </div>
+    <DashboardShell>
+      <DashboardHeader 
+        heading="Dashboard" 
+        text="Monitor and analyze security events across your organization."
+      />
       
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-gray-500 text-sm">Total Logs</h3>
-          <p className="text-2xl font-bold">{stats.totalLogs}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-gray-500 text-sm">Total Alerts</h3>
-          <p className="text-2xl font-bold">{stats.totalAlerts}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-gray-500 text-sm">High Severity Alerts</h3>
-          <p className="text-2xl font-bold text-red-600">{stats.highSeverityAlerts}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-gray-500 text-sm">Active Users</h3>
-          <p className="text-2xl font-bold">{stats.activeUsers}</p>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Logs</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalLogs}</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Alerts</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M16 3h5v5" />
+              <path d="M21 3l-7 7" />
+              <path d="M3 16l5 5" />
+              <path d="M8 21l-5-5" />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalAlerts}</div>
+            <p className="text-xs text-muted-foreground">
+              +12% from last week
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">High Severity Alerts</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M12 2v20M2 12h20" />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-500">{stats.highSeverityAlerts}</div>
+            <p className="text-xs text-muted-foreground">
+              Requires immediate attention
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.activeUsers}</div>
+            <p className="text-xs text-muted-foreground">
+              Active in last 24 hours
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Chart */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-xl font-bold mb-4">Access Activity</h2>
-        <div className="h-64">
-          <Line data={chartData} options={{
-            responsive: true,
-            maintainAspectRatio: false
-          }} />
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Access Activity</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <AccessActivity />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Recent Alerts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecentAlerts />
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Recent Alerts */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">Recent Alerts</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Severity</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {alerts.slice(0, 5).map((alert) => (
-                <tr key={alert.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(alert.timestamp).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{alert.source_log_id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      alert.severity === 'high' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {alert.severity}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{alert.description}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="mt-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Overview />
+          </CardContent>
+        </Card>
       </div>
-    </main>
+    </DashboardShell>
   );
 } 
